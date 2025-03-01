@@ -1,0 +1,11 @@
+.CustomeContainer{
+    width: 10%;
+    height: 5rem;
+    border: 2px solid black;
+    border-radius: 15px;
+    box-shadow: 2px 2px 10px 2px wheat;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+}
