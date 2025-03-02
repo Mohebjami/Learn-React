@@ -1,3 +1,10 @@
-h2::before {
-    content: '------ = '
+@import "tailwindcss";
+
+.body{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    text-align: center;
+    padding: 25%;
 }
