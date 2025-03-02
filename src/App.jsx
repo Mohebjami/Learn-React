@@ -1,35 +1,45 @@
-import React, { useState } from 'react'
+import {React,useState} from 'react'
 
 function App() {
-  const arr = ['a', 'b', 'c']
-  const [up , setUp] = useState(arr)
+  const arr = ['a','b','c']
+  const [newdata ,setNewdata] = useState(arr);
 
-  const handleUpdate = () => {
-    setUp((prev) => {
-      const result = [...prev]
-      result[prev.length] = 'new item'
-      return result
-    });
-  }
-
-  const handleDelete = (index) => {
-    setUp((prev) => {
+  const handelAdd = ()=>
+    {
+      setNewdata((prev) => {
+        const result = [...prev]
+        result[prev.length] = 'New Item'
+        return result
+      })
+    }
+  const handelDelete = (index)=>{
+    setNewdata((prev)=>{
       let result = [...prev]
       result.splice(index, 1)
       return result;
-    });
+    })
   }
+
+  const handelUpdate = (index) => {
+    setNewdata((prev) => {
+      const result = [...prev]
+      result[index] = 'New Item update '
+      return result
+    })
+  }
+
 
   return (
     <div>
-      <ul>
-        {up.map((item, index) => (
-          <><li key={index}>{item}</li><button onClick={() => { handleDelete(index); } }>Delete</button></>
-        ))}
-
-      </ul>
-      <button onClick={handleUpdate}>Update</button>
-
+      {newdata.map((item, index) => (
+        <><ul>
+          <li key={index}>{item}</li>
+          <button type="button" onClick={() => { handelDelete(index); }}>Delete</button>
+          <button type="button" onClick={() => { handelUpdate(index); }}>Update</button>
+        </ul>
+        </>
+      ))}
+      <button type="button" onClick={handelAdd}> add new item</button>
     </div>
   )
 }
