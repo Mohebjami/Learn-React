@@ -1,18 +1,23 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Test from './components/test';
-import Body from './components/main/Body';
-import Footer from './components/main/Footer';
+import Login from './components/main/View/login';
+import Body from './components/main/View/Body';
+import Footer from './components/main/View/Footer';
+import Navbar from './components/main/View/Navbar'
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Test />} />
-        <Route path="/body" element={<Body />} />
-        <Route path='/footer' element={<Footer/>} />
-      </Routes>
-    </Router>
+    <>
+      <Navbar/>
+        <Router>
+          <Routes>
+            <Route path="/" element={<Login />} />
+            <Route path="/body" element={<Body />} />
+          </Routes>
+        </Router>
+      <Footer/>
+    </>
+
   );
 }
 
