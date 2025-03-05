@@ -2,15 +2,13 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import { FaGoogle, FaGithub } from "react-icons/fa";
-import Body from './../View/Body'
+import Body from '../main/View/Body'
 
 function Login() {
-  const username = 'moheb'
   const email = 'moheb@gmail.com'
   const pass = '123456'
 
   const [formdata, setFormData] = useState({
-    username: "",
     email: "",
     password: "",
   });
@@ -29,7 +27,6 @@ function Login() {
 
   const validateForm = () => {
     let newErrors = {};
-    if (!formdata.username) newErrors.username = "Username is required.";
     if (!formdata.email) {
       newErrors.email = "Email is required.";
     } else if (!/\S+@\S+\.\S+/.test(formdata.email)) {
@@ -45,7 +42,7 @@ function Login() {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (validateForm()) {
-      if (formdata.username == username && formdata.email == email && formdata.password == pass) {
+      if (formdata.email == email && formdata.password == pass) {
         navigate("/body", { state: formdata });
       }
       else
@@ -66,26 +63,11 @@ function Login() {
 
         {/* Heading */}
         <h2 className="mt-4 text-center text-2xl font-semibold text-gray-900">
-          Sign in to your account
+          Login in to your account
         </h2>
 
         {/* Form */}
         <form className="mt-6 space-y-4">
-
-        <div>
-            <label className="block text-sm font-medium text-gray-700">
-              User name
-            </label>
-            <input
-              type="text"
-              name="username"
-              className="mt-1 w-full rounded-md border border-gray-300 p-2 focus:border-indigo-500 focus:ring-indigo-500"
-              value={formdata.username}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Email address
@@ -154,7 +136,7 @@ function Login() {
         {/* Sign-Up Link */}
         <p className="mt-6 text-center text-sm text-gray-500">
           Don't have an account?
-          <a href="#" className="text-indigo-600 hover:underline">
+          <a href="/sginIn" className="text-indigo-600 hover:underline">
            Sign Up.
           </a>
         </p>
