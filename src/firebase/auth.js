@@ -16,13 +16,11 @@ export const doSignInWithEmailAndPassword = (email, password) => {
   return signInWithEmailAndPassword(auth, email, password);
 };
 
+
 export const doSignInWithGoogle = async () => {
   const provider = new GoogleAuthProvider();
   const result = await signInWithPopup(auth, provider);
-  // eslint-disable-next-line no-unused-vars
   const user = result.user;
-
-  // add user to firestore
 };
 
 export const doSignOut = () => {

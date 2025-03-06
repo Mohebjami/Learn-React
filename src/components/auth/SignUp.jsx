@@ -1,90 +1,128 @@
-import React, { useState } from "react";
-import { ChevronDownIcon } from "@heroicons/react/16/solid";
+/* eslint-disable no-unused-vars */
+import React, { useState } from 'react';
+import { Navigate, Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/authContext/index';
+import { doCreateUserWithEmailAndPassword } from '../../firebase/auth';
 
-function SignUp() {
-  const [data, setData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    country: "United States",
-    streetAddress: "",
-    city: "",
-    phoneNumber: "",
-    telephoneNumber: "",
-  });
+const SignUp = () => {
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+    const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(data);
-  };
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [isRegistering, setIsRegistering] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
-  return (
-    <form className="p-6 sm:p-10 md:p-16 lg:p-20 bg-gray-50">
-      <div className="flex items-center justify-center">
-        <div className="border-b border-gray-900/10 bg-white shadow-md rounded-2xl p-6 sm:p-10 w-full max-w-4xl">
-          <h1 className="text-lg font-semibold text-gray-900 text-center">Personal Information</h1>
+    const { userLoggedIn } = useAuth();
 
-          <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-6">
-            <div className="sm:col-span-3">
-              <label htmlFor="firstName" className="block text-sm font-medium text-gray-900">First name</label>
-              <input id="firstName" name="firstName" type="text" value={data.firstName} onChange={handleChange} autoComplete="given-name" className="mt-2 block w-full rounded-md bg-white px-3 py-2 text-base text-gray-900 border border-gray-300 focus:border-indigo-600 focus:ring-indigo-600 sm:text-sm" />
-            </div>
+    const onSubmit = async (e) => {
+        e.preventDefault();
+        setErrorMessage('');
 
-            <div className="sm:col-span-3">
-              <label htmlFor="lastName" className="block text-sm font-medium text-gray-900">Last name</label>
-              <input id="lastName" name="lastName" type="text" value={data.lastName} onChange={handleChange} autoComplete="family-name" className="mt-2 block w-full rounded-md bg-white px-3 py-2 text-base text-gray-900 border border-gray-300 focus:border-indigo-600 focus:ring-indigo-600 sm:text-sm" />
-            </div>
+        if (password.length < 6) {
+            setErrorMessage('Password should be at least 6 characters long');
+            setIsRegistering(false);
+            return;
+        }
 
-            <div className="sm:col-span-4">
-              <label htmlFor="email" className="block text-sm font-medium text-gray-900">Email address</label>
-              <input id="email" name="email" type="email" value={data.email} onChange={handleChange} autoComplete="email" className="mt-2 block w-full rounded-md bg-white px-3 py-2 text-base text-gray-900 border border-gray-300 focus:border-indigo-600 focus:ring-indigo-600 sm:text-sm" />
-            </div>
+        if (password !== confirmPassword) {
+            setErrorMessage('Passwords do not match'); 
+            setIsRegistering(false);
+            return;
+        }
 
-            <div className="sm:col-span-3 relative">
-              <label htmlFor="country" className="block text-sm font-medium text-gray-900">Country</label>
-              <select id="country" name="country" value={data.country} onChange={handleChange} className="mt-2 block w-full appearance-none rounded-md bg-white py-2 pr-8 pl-3 text-base text-gray-900 border border-gray-300 focus:border-indigo-600 focus:ring-indigo-600 sm:text-sm">
-                <option value="United States">United States</option>
-                <option value="Canada">Canada</option>
-                <option value="Mexico">Mexico</option>
-              </select>
-              <ChevronDownIcon className="absolute top-9 right-3 w-5 h-5 text-gray-500 pointer-events-none" />
-            </div>
+        if (!isRegistering) {
+            setIsRegistering(true);
+            try {
+                console.log(email);
+                console.log(password);
+                await doCreateUserWithEmailAndPassword(email, password);
+                setIsRegistering(false);
+                navigate('/body');
+            } catch (error) {
+                setErrorMessage(error.message);
+                setIsRegistering(false);
+            }
+        }
+    };
 
-            <div className="col-span-full">
-              <label htmlFor="streetAddress" className="block text-sm font-medium text-gray-900">Street address</label>
-              <input id="streetAddress" name="streetAddress" type="text" value={data.streetAddress} onChange={handleChange} autoComplete="street-address" className="mt-2 block w-full rounded-md bg-white px-3 py-2 text-base text-gray-900 border border-gray-300 focus:border-indigo-600 focus:ring-indigo-600 sm:text-sm" />
-            </div>
+    return (
+        <>
+            {userLoggedIn && (<Navigate to={'/body'} replace={true} />)}
 
-            <div className="sm:col-span-2">
-              <label htmlFor="city" className="block text-sm font-medium text-gray-900">City</label>
-              <input id="city" name="city" type="text" value={data.city} onChange={handleChange} placeholder="Herat" autoComplete="address-level2" className="mt-2 block w-full rounded-md bg-white px-3 py-2 text-base text-gray-900 border border-gray-300 focus:border-indigo-600 focus:ring-indigo-600 sm:text-sm" />
-            </div>
+            <main className="w-full h-screen flex self-center place-content-center place-items-center">
+                <div className="w-96 text-gray-600 space-y-5 p-4 shadow-xl border rounded-xl">
+                    <div className="text-center mb-6">
+                        <div className="mt-2">
+                            <h3 className="text-gray-800 text-xl font-semibold sm:text-2xl">Create a New Account</h3>
+                        </div>
+                    </div>
+                    <form
+                        onSubmit={onSubmit}
+                        className="space-y-4"
+                    >
+                        <div>
+                            <label className="text-sm text-gray-600 font-bold">
+                                Email
+                            </label>
+                            <input
+                                type="email"
+                                autoComplete='email'
+                                required
+                                value={email} onChange={(e) => { setEmail(e.target.value) }}
+                                className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:indigo-600 shadow-sm rounded-lg transition duration-300"
+                            />
+                        </div>
 
-            <div className="sm:col-span-2">
-              <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-900">Phone number</label>
-              <input id="phoneNumber" name="phoneNumber" type="tel" value={data.phoneNumber} onChange={handleChange} placeholder="+93799999999" className="mt-2 block w-full rounded-md bg-white px-3 py-2 text-base text-gray-900 border border-gray-300 focus:border-indigo-600 focus:ring-indigo-600 sm:text-sm" />
-            </div>
+                        <div>
+                            <label className="text-sm text-gray-600 font-bold">
+                                Password
+                            </label>
+                            <input
+                                disabled={isRegistering}
+                                type="password"
+                                autoComplete='new-password'
+                                required
+                                value={password} onChange={(e) => { setPassword(e.target.value) }}
+                                className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg transition duration-300"
+                            />
+                        </div>
 
-            <div className="sm:col-span-2">
-              <label htmlFor="telephoneNumber" className="block text-sm font-medium text-gray-900">Telephone number</label>
-              <input id="telephoneNumber" name="telephoneNumber" type="tel" value={data.telephoneNumber} onChange={handleChange} placeholder="+93799999999" className="mt-2 block w-full rounded-md bg-white px-3 py-2 text-base text-gray-900 border border-gray-300 focus:border-indigo-600 focus:ring-indigo-600 sm:text-sm" />
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="flex items-center justify-center mt-6">
-        <button type="submit" onClick={handleSubmit} className="w-full sm:w-auto px-6 py-2 rounded-md bg-indigo-600 text-white font-semibold hover:bg-indigo-700">Save</button>
-      </div>
-    </form>
-  );
+                        <div>
+                            <label className="text-sm text-gray-600 font-bold">
+                                Confirm Password
+                            </label>
+                            <input
+                                disabled={isRegistering}
+                                type="password"
+                                autoComplete='off'
+                                required
+                                value={confirmPassword} onChange={(e) => { setConfirmPassword(e.target.value) }}
+                                className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg transition duration-300"
+                            />
+                        </div>
+
+                        {errorMessage && (
+                            <span className='text-red-600 font-bold'>{errorMessage}</span>
+                        )}
+
+                        <button
+                            type="submit"
+                            disabled={isRegistering}
+                            className={`w-full px-4 py-2 text-white font-medium rounded-lg ${isRegistering ? 'bg-gray-300 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 hover:shadow-xl transition duration-300'}`}
+                        >
+                            {isRegistering ? 'Signing Up...' : 'Sign Up'}
+                        </button>
+                        <div className="text-sm text-center">
+                            Already have an account? {'   '}
+                            <Link to={'/login'} className="text-center text-sm hover:underline font-bold">Continue</Link>
+                        </div>
+                    </form>
+                </div>
+            </main>
+        </>
+    );
 }
 
 export default SignUp;

@@ -1,6 +1,7 @@
 
 import '../../../style/navbar.css'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import {
   Dialog,
   DialogPanel,
@@ -22,6 +23,8 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, PhoneIcon, PlayCircleIcon } from '@heroicons/react/20/solid'
+import { doSignOut } from '../../../firebase/auth'
+import { useAuth } from '../../../contexts/authContext';
 
 const products = [
   { name: 'Analytics', description: 'Get a better understanding of your traffic', href: '#', icon: ChartPieIcon },
@@ -36,10 +39,19 @@ const callsToAction = [
 ]
 
 
-
 const Navbar = () => {
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const { userLoggedIn } = useAuth();
 
+  const handleSignOut = async () => {
+    try {
+      await doSignOut();
+      navigate('/login');
+    } catch (error) {
+      console.error('Sign out failed:', error);
+    }
+  };
     return (
       <header className="bg-gray-50 border-b border-gray-200">
         <nav aria-label="Global" className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8">
@@ -119,9 +131,11 @@ const Navbar = () => {
             </a>
           </PopoverGroup>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-            <a href="#" className="text-sm/6 font-semibold text-gray-900">
-              Log in <span aria-hidden="true">&rarr;</span>
-            </a>
+          {userLoggedIn ? (
+            <button onClick={handleSignOut} className="text-black">Logout</button>
+          ) : (
+            <button onClick={() => navigate('/login')} className="text-black">Login</button> // ✅ Show Login button if not logged in
+          )}
           </div>
         </nav>
         <Dialog open={mobileMenuOpen} onClose={setMobileMenuOpen} className="lg:hidden">
@@ -186,12 +200,11 @@ const Navbar = () => {
                   </a>
                 </div>
                 <div className="py-6">
-                  <a
-                    href="#"
-                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
-                  >
-                    Log in
-                  </a>
+                {userLoggedIn ? (
+            <button onClick={handleSignOut} className="text-black">Logout</button>
+          ) : (
+            <button onClick={() => navigate('/login')} className="text-black">Login</button> // ✅ Show Login button if not logged in
+          )}
                 </div>
               </div>
             </div>

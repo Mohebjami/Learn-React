@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, BrowserRouter } from 'react-router-dom';
 import Login from './components/auth/Login';
 import Body from './components/main/View/Body';
 import Footer from './components/main/View/Footer';
@@ -9,10 +9,14 @@ import SignUp from './components/auth/SignUp';
 function App() {
   return (
     <>
-      <Navbar/>
+    <BrowserRouter>
+     <Navbar/>
+    </BrowserRouter>
+     
         <Router>
           <Routes>
             <Route path="/" element={<Login />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/body" element={<Body />} />
             <Route path="/sginIn" element={<SignUp />} />
           </Routes>
