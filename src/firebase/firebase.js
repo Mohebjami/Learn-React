@@ -1,10 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
-// import { getFirestore } from "firebase/firestore";
-// import { collection, addDoc, updateDoc, doc } from 'firebase/firestore';
 
-// Your web app's Firebase configuration 
 const firebaseConfig = {
   apiKey: "AIzaSyCnNF7ttWTD9hBBpLIRSyFpRPT4hkQj4WQ",
   authDomain: "onlineshop-a7c26.firebaseapp.com",
@@ -19,8 +16,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
-// const firestore = getFirestore(app); 
 
-// export { app, auth, firestore, collection, addDoc, updateDoc, doc };
 
 export { app, auth };
